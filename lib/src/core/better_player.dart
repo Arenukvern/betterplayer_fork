@@ -11,7 +11,11 @@ import 'package:wakelock/wakelock.dart';
 
 ///Widget which uses provided controller to render video player.
 class BetterPlayer extends StatefulWidget {
-  const BetterPlayer({Key? key, required this.controller}) : super(key: key);
+  const BetterPlayer({
+    required this.controller,
+    this.shouldDisposeController = true,
+    Key? key,
+  }) : super(key: key);
 
   factory BetterPlayer.network(
     String url, {
@@ -38,7 +42,7 @@ class BetterPlayer extends StatefulWidget {
       );
 
   final BetterPlayerController controller;
-
+  final bool shouldDisposeController;
   @override
   _BetterPlayerState createState() {
     return _BetterPlayerState();
@@ -113,7 +117,7 @@ class _BetterPlayerState extends State<BetterPlayer>
 
     WidgetsBinding.instance.removeObserver(this);
     _controllerEventSubscription?.cancel();
-    // widget.controller.dispose();
+    if (widget.shouldDisposeController) widget.controller.dispose();
     VisibilityDetectorController.instance
         .forget(Key("${widget.controller.hashCode}_key"));
     super.dispose();
